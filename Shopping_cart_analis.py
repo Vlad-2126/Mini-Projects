@@ -25,4 +25,12 @@ def dict_former(lists = raw_data):
 def price_filter(dictionary = dict_former(),price = 100):
     filtered_dict = {key:value for key,value in dictionary.items() if value>price}
     print(filtered_dict)
-    return price_filter
+    return filtered_dict
+
+@log_maker
+def customer_list(dictionary = price_filter()):
+    new_list = [f"{key} стоит {value}$" for key,value in dictionary.items()]
+    print(new_list)
+    return new_list
+
+customer_list()
