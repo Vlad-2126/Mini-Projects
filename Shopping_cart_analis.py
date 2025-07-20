@@ -23,4 +23,6 @@ def dict_former(lists = raw_data):
 
 @log_maker
 def price_filter(dictionary = dict_former(),price = 100):
-    filtered_dict = dict(key:walue for key,walue in dictionary.items())
+    filtered_dict = {key:value for key,value in dictionary.items() if value>price}
+    print(filtered_dict)
+    return price_filter
