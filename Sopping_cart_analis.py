@@ -23,4 +23,4 @@ def dict_former(lists = raw_data):
 
 @log_maker
 def price_filter(dictionary = dict_former(),price = 100):
-    pass
+    filtered_dict = dict(key:walue for key,walue in dictionary.items())
