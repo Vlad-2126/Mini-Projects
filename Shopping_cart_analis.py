@@ -37,4 +37,21 @@ def customer_list(dictionary = None):
     print(new_list)
     return new_list
 
-customer_list()
+def lets_start():
+    while True:
+        command = input("Введити Вашу команду, чтобы вызвать список команд введите 'помощь': ")
+        match command:
+            case "выход":
+                break
+            case "помощь":
+                print('''Список доступных команд: сформировать словарь, отфильтровать, результат.
+                      Для выхода из программы введите "помощь". ''')
+            case "сформировать словарь":
+                dict_former()
+            case "отфильтровать":
+                prices = input("Введите цену товара: ")
+                price_filter(price=prices)
+            case "результат":
+                customer_list()
+
+lets_start()
