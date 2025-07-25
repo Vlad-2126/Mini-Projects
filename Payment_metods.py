@@ -57,4 +57,12 @@ class PayPalPayment(PaymentMethod):
         return valid
 
     
-print(date(2026,5,4)>=date.today())
+class Order:
+    def __init__(self):
+        self.__items = []
+        self.__total = 0
+    
+    def add_item(self,name,amount):
+        self.__items.append((name,amount))
+        self.__total += amount
+        print(f"{self.__items} was added to your card, ammount: {self.__total}")
