@@ -15,13 +15,36 @@ class Product:
         return value == self.name
     
 class Cart():        
-    pass
+    def __init__(self):
+        self.products = list()
+    
+    def add_product(self,product):
+        self.products.append(product)
+        print(product.name)
+    
+    def __delitem__(self,index):
+        print(f"{self.products[index]} was removed")
+        del self.products[index]
+    
+    def __getitem__(self,index):
+        print(f"{self.products[index]} is {index} in cart")
+        return self.products[index]
+    
+    def __setitem__(self,index,item):
+        print(f"Item {self.products[index]} was replaced by {item}")
+        self.products[index] = item
+        
+    def __len__(self):
+        print(f"Your ordered {len(self.products)} items")
+        return len(self.products)
 
 class User:
-    def __init__(self,name,balance):
+    user_history_list = dict()
+    
+    def __init__(self,name,balance,card = None):
         self.name = name
         self._balance = int(balance)
-        self.card = None
+        self.card = card
     
     def __str__(self):
         return f"User name: {self.name}, balaance: {self._balance}$"
@@ -33,6 +56,22 @@ class User:
             return f"{self.name}'s balance is equal then {other.name}"
         else:
             return f"{self.name}'s balance is less then {other.name}"
+        
+    def user_history(self):
+        pass
+        
+    def checout(self):
+        if self.card == None:
+            print("Your card is empty")
+        else:
+            for items in self.card:
+                summ += items[2]
+            if summ <= self._balance:
+                self._balance -= summ
+                self.card = None
+                print(f"Payment was successful,payed: {summ}, curent balance: {self._balance}")
+            else:
+                print("You have not enought money on your balance")
             
 p1 = Product("iPhone 15", "smartphone", 1200)
 p2 = Product("MacBook Pro", "laptop", 2500)
