@@ -14,13 +14,16 @@ class Product:
     def __eq__(self, value):
         return value == self.name
     
-class Cart():        
+class Cart:        
     def __init__(self):
         self.products = list()
     
     def add_product(self,product):
         self.products.append(product)
-        print(product.name)
+        print(f"You added {product.name} in your card")
+    
+    def __str__(self):
+        return f"Your cart is: {self.products}"
     
     def __delitem__(self,index):
         print(f"{self.products[index]} was removed")
@@ -37,6 +40,13 @@ class Cart():
     def __len__(self):
         print(f"Your ordered {len(self.products)} items")
         return len(self.products)
+    
+    def __bool__(self):
+        if not self.products:
+            print("Your cart is empty")
+        else:
+            print(f"Your cart has {len(self.products)} items")
+        return bool(self.products)
 
 class User:
     user_history_list = dict()
@@ -72,25 +82,21 @@ class User:
                 print(f"Payment was successful,payed: {summ}, curent balance: {self._balance}")
             else:
                 print("You have not enought money on your balance")
-            
-p1 = Product("iPhone 15", "smartphone", 1200)
-p2 = Product("MacBook Pro", "laptop", 2500)
 
 
 
+iphone = Product("iPhone 15", "smartphone", 1200)
+laptop = Product("MacBook Pro", "laptop", 2500)
 
+cart = Cart()
+cart.add_product(iphone)
+# print(cart)
+cart.add_product(laptop)
+# print(cart)
 
-
-# iphone = Product("iPhone 15", "smartphone", 1200)
-# laptop = Product("MacBook Pro", "laptop", 2500)
-
-# cart = Cart()
-# cart.add_product(iphone)
-# cart.add_product(laptop)
-
-# print(len(cart))        # 2
-# print(cart[0])          # iPhone 15
-# print(bool(cart))       # True
+print(len(cart))        # 2
+print(cart[0])          # iPhone 15
+print(bool(cart))       # True
 
 # user = User("Alice", 3000)
 # user.checkout(cart)     # Покупка с проверкой баланса
