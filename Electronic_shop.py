@@ -10,8 +10,10 @@ class Product:
     def __repr__(self):
         return f"Product(object name = {self.name})"
     
-    def __eq__(self, value):
-        return value == self.name
+    def __eq__(self, other):
+        if isinstance(other, Product):
+            return (self.name,self.types,self.price) == (other.name,other.types,other.price) 
+        return False
     
 class DigitalProduct(Product):
     def __init__(self, name, types, price, download_link):
