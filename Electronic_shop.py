@@ -68,6 +68,9 @@ class User:
         return f"User name: {self.name}, balaance: {self._balance}$"
     
     def __gt__(self,other):
+        return self._balance > other._balance
+    
+    def compere_balance(self,other):
         if self._balance > other._balance:
             return f"{self.name}'s balance is greater then {other.name}"
         elif self._balance == other._balance:
