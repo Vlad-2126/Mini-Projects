@@ -79,7 +79,13 @@ class User:
             return f"{self.name}'s balance is less then {other.name}"
         
     def user_history(self):
-        pass
+        history = User.user_history_list.get(self.name, [])
+        if not history:
+            print("No purchase history")
+        else:
+            print("Purchase history")
+            for item in history:
+                print(item)
         
     def checkout(self,cart: Cart):
         summ = sum(p.price for p in cart.products)
