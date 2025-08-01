@@ -1,8 +1,9 @@
-class Product:
-    def __init__(self,name,price,types):
+class Product:   
+    def __init__(self,name,types,price,):
         self.name = name
-        self.type = types
-        self.price = price
+        self.types = types
+        self.price = int(price)
+        # products[self] = (self.name,self.types,self.price)
     
     def __str__(self):
         return f"Product: {self.name}, price: {self.price}"
@@ -13,7 +14,16 @@ class Product:
     def __eq__(self, value):
         return value == self.name
     
-    
+class Cart(Product):        
+    pass
+
+class User:
+    pass
+            
+p1 = Product("iPhone 15", "smartphone", 1200)
+p2 = Product("MacBook Pro", "laptop", 2500)
+
+
 
 
 
