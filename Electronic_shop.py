@@ -32,7 +32,7 @@ class Cart:
         print(f"You added {product.name} in your card")
     
     def __str__(self):
-        return f"Your cart is: {self.products}"
+        return "Your cart is empty" if not self.products else f"Your cart contains: {"".join(f"{i+1}. {p}" for i,p in enumerate(self.products))}"
     
     def __delitem__(self,index):
         print(f"{self.products[index]} was removed")
