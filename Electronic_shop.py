@@ -3,7 +3,6 @@ class Product:
         self.name = name
         self.types = types
         self.price = int(price)
-        # products[self] = (self.name,self.types,self.price)
     
     def __str__(self):
         return f"Product: {self.name}, price: {self.price}"
@@ -13,6 +12,14 @@ class Product:
     
     def __eq__(self, value):
         return value == self.name
+    
+class DigitalProduct(Product):
+    def __init__(self, name, types, price, download_link):
+        super().__init__(name, types, price)
+        self.download_link = download_link
+    
+    def __str__(self):
+        return f"Product: {self.name}, price: {self.price}, link for downloading: {self.download_link}"
     
 class Cart:        
     def __init__(self):
@@ -51,10 +58,9 @@ class Cart:
 class User:
     user_history_list = dict()
     
-    def __init__(self,name,balance,card = None):
+    def __init__(self,name,balance):
         self.name = name
         self._balance = int(balance)
-        self.card = card
     
     def __str__(self):
         return f"User name: {self.name}, balaance: {self._balance}$"
@@ -70,35 +76,36 @@ class User:
     def user_history(self):
         pass
         
-    def checout(self):
-        if self.card == None:
+    def checkout(self,card = None):
+        summ = 0
+        if card == None:
             print("Your card is empty")
         else:
-            for items in self.card:
-                summ += items[2]
+            for items in card:
+                summ += items.price
             if summ <= self._balance:
                 self._balance -= summ
-                self.card = None
+                card = None
                 print(f"Payment was successful,payed: {summ}, curent balance: {self._balance}")
             else:
                 print("You have not enought money on your balance")
 
+# Testing stuff
 
+# iphone = Product("iPhone 15", "smartphone", 1200)
+# laptop = Product("MacBook Pro", "laptop", 2500)
 
-iphone = Product("iPhone 15", "smartphone", 1200)
-laptop = Product("MacBook Pro", "laptop", 2500)
+# cart = Cart()
+# cart.add_product(iphone)
+# # print(cart)
+# cart.add_product(laptop)
+# # print(cart)
 
-cart = Cart()
-cart.add_product(iphone)
-# print(cart)
-cart.add_product(laptop)
-# print(cart)
+# print(len(cart))        # 2
+# print(cart[0])          # iPhone 15
+# print(bool(cart))       # True
 
-print(len(cart))        # 2
-print(cart[0])          # iPhone 15
-print(bool(cart))       # True
-
-# user = User("Alice", 3000)
+# user = User("Alice", 5000)
 # user.checkout(cart)     # Покупка с проверкой баланса
 
 # print(user)             # Имя и остаток баланса
