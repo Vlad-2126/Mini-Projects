@@ -58,8 +58,8 @@ class Cart:
         return bool(self.products)
 
 class User:
-    user_history_list = dict()
-    
+    user_history_list = {}
+        
     def __init__(self,name,balance):
         self.name = name
         self._balance = int(balance)
@@ -81,19 +81,15 @@ class User:
     def user_history(self):
         pass
         
-    def checkout(self,card = None):
-        summ = 0
-        if card == None:
-            print("Your card is empty")
+    def checkout(self,cart: Cart):
+        summ = sum(p.price for p in cart.products)
+        if summ <= self._balance:
+            self._balance -= summ
+            User.user_history_list[self.name] = cart.products.copy()
+            cart.products.clear()
+            print(f"Payment was successful,payed: {summ}, curent balance: {self._balance}")
         else:
-            for items in card:
-                summ += items.price
-            if summ <= self._balance:
-                self._balance -= summ
-                card = None
-                print(f"Payment was successful,payed: {summ}, curent balance: {self._balance}")
-            else:
-                print("You have not enought money on your balance")
+            print("You have not enought money on your balance")
 
 # Testing stuff
 
