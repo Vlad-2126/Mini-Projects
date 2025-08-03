@@ -1,8 +1,10 @@
 class Product:   
-    def __init__(self,name,types,price,):
+    def __init__(self,name,types,price,login,password):
         self.name = name
         self.types = types
         self.price = int(price)
+        self.login = login
+        self.password = password
     
     def __str__(self):
         return f"Product: {self.name}, price: {self.price}"
@@ -16,8 +18,8 @@ class Product:
         return False
     
 class DigitalProduct(Product):
-    def __init__(self, name, types, price, download_link):
-        super().__init__(name, types, price)
+    def __init__(self, name, types, price,login,password, download_link):
+        super().__init__(name, types, price,login,password)
         self.download_link = download_link
     
     def __str__(self):
@@ -101,7 +103,15 @@ def program_start():
     while True:
         sign_in = input("Pleas enter your login if you are registered or create new account: ").lower()
         if sign_in == "create new account":
-            pass
+            ready = False
+            while ready == False:
+                ready = False
+                login = input("Pleas enter your new login")
+                if isinstance(login, User):
+                    print("Your logi should be unique, try another one")
+                    continue
+                ready = True
+                
         else:
             pass
 
