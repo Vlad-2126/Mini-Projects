@@ -97,6 +97,14 @@ class User:
         else:
             print("You have not enought money on your balance")
 
+def program_start():
+    while True:
+        sign_in = input("Pleas enter your login if you are registered or create new account: ").lower()
+        if sign_in == "create new account":
+            pass
+        else:
+            pass
+
 # Testing stuff
 
 # iphone = Product("iPhone 15", "smartphone", 1200)
