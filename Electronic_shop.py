@@ -104,16 +104,27 @@ def program_start():
     while True:
         sign_in = input("Pleas enter your login if you are registered or create new account: ").lower()
         if sign_in == "create new account":
-            user_data = []
+            user_data = ["",0,"",""]
             ready = False
-            while ready == False:
-                login = input("Pleas enter your new login")
+            while ready is False:
+                login = input("Pleas enter your new login: ")
                 if isinstance(login, User):
                     print("Your logi should be unique, try another one")
                     continue
+                user_data[2] = login
                 ready = True
             ready = False
-                
+            while ready is False:
+                password = input("Pleas enter your new password: ") 
+                while True:
+                    password_check = input("Pleas enter your password again: ")
+                    if password == password_check:
+                        break
+                    print("Incorrect, try again")
+                    continue
+                user_data[3] = password
+                ready = True
+            ready = False
         else:
             pass
 
