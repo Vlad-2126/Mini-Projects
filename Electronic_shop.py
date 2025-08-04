@@ -129,7 +129,9 @@ def program_start():
             ready = False
             name = input("What is your real name: ")
             user_data[0] = name
-            globals()[name] = User(user_data[0],0,user_data[2],user_data[3])
+            users[name] = user_data
+            users[name] = User(user_data[0],0,user_data[2],user_data[3])
+            
 
 # Testing stuff
 
