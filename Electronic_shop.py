@@ -1,3 +1,5 @@
+users = {}
+
 class Product:   
     def __init__(self,name,types,price,):
         self.name = name
@@ -125,8 +127,9 @@ def program_start():
                 user_data[3] = password
                 ready = True
             ready = False
-        else:
-            pass
+            name = input("What is your real name: ")
+            user_data[0] = name
+            globals()[name] = User(user_data[0],0,user_data[2],user_data[3])
 
 # Testing stuff
 
