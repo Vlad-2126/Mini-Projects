@@ -1,5 +1,3 @@
-users = {}
-
 class Product:   
     def __init__(self,name,types,price,):
         self.name = name
@@ -102,9 +100,11 @@ class User:
         else:
             print("You have not enought money on your balance")
 
+users = {"Admin":User("Oleg",1000000,"Admin","1234")}            
+
 def program_start():
     while True:
-        sign_in = input("Pleas enter your login if you are registered or create new account: ").lower()
+        sign_in = input("Do you want to sign in or create new account: ").lower()
         if sign_in == "create new account":
             ready = False
             while ready is False:
@@ -126,7 +126,55 @@ def program_start():
             ready = False
             name = input("What is your real name: ")
             users[login] = User(name,0,login,password)
-            
+            continue
+        else:
+            while True:
+                login = input("Pleas write your login: ")
+                if login not in users:
+                    print("There is no user with that login, try another one")
+                    continue
+                break
+            while True:
+                password_check = input("Pleas enter your password: ")
+                if password_check != login.password:
+                    print("There is no user with that login, try another one")
+                    continue
+                break
+            while True:
+                print(f"Hello {login.name}, how can I halp you? If you whant to see the list of commands, write 'help'")
+                if login.login == "Admin":
+                    print(f"Hello {login.name}, if you forgot admin's command ")
+                command = input("Pleas write your command: ").lower()
+                match command:
+                    case "help":
+                        pass
+                    case "products":
+                        pass
+                    case "add product":
+                        pass
+                    case "remove product":
+                        pass
+                    case "my cart":
+                        pass
+                    case "checkout":
+                        pass
+                    case "top up balance":
+                        pass
+                    case "history":
+                        pass
+                    case "exit":
+                        break
+                    case "add new product":
+                        if login.login == "Admin":
+                            pass
+                    case "remove old product":
+                        if login.login == "Admin":
+                            pass
+                    case "change curent product":
+                        if login.login == "Admin":
+                            pass
+                        
+                      
 
 # Testing stuff
 
