@@ -110,7 +110,7 @@ def program_start():
             ready = False
             while ready is False:
                 login = input("Pleas enter your new login: ")
-                if isinstance(login, User):
+                if login in users:
                     print("Your logi should be unique, try another one")
                     continue
                 user_data[2] = login
