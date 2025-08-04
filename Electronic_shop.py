@@ -106,14 +106,12 @@ def program_start():
     while True:
         sign_in = input("Pleas enter your login if you are registered or create new account: ").lower()
         if sign_in == "create new account":
-            user_data = ["",0,"",""]
             ready = False
             while ready is False:
                 login = input("Pleas enter your new login: ")
                 if login in users:
                     print("Your logi should be unique, try another one")
                     continue
-                user_data[2] = login
                 ready = True
             ready = False
             while ready is False:
@@ -124,13 +122,10 @@ def program_start():
                         break
                     print("Incorrect, try again")
                     continue
-                user_data[3] = password
                 ready = True
             ready = False
             name = input("What is your real name: ")
-            user_data[0] = name
-            users[name] = user_data
-            users[name] = User(user_data[0],0,user_data[2],user_data[3])
+            users[login] = User(name,0,login,password)
             
 
 # Testing stuff
