@@ -159,15 +159,16 @@ def program_start():
                     continue
                 break
             while True:
+                user = users[login]
                 password_check = input("Pleas enter your password: ")
-                if password_check != login.password:
+                if password_check != user.password:
                     print("There is no user with that login, try another one")
                     continue
                 break
             while True:
-                print(f"Hello {login.name}, how can I halp you? If you whant to see the list of commands, write 'help'")
+                print(f"Hello {user.name}, how can I halp you? If you whant to see the list of commands, write 'help'")
                 if login.login == "Admin":
-                    print(f"Hello {login.name}, if you forgot admin's command ")
+                    print(f"Hello {user.name}, if you forgot admin's command ")
                 command = input("Pleas write your command: ").lower()
                 match command:
                     case "help":
@@ -181,7 +182,7 @@ def program_start():
                             users_cart[login] = Cart()
                         add_product = input("Witch product do you want to add?: ")
                         if add_product in products_list:
-                            login.add_product(add_product)
+                            users_cart[login].add_product(products_list[add_product])
                     case "remove product":
                         pass
                     case "my cart":
@@ -195,17 +196,17 @@ def program_start():
                     case "log out":
                         break
                     case "admin's command":
-                        if login.login == "Admin":
+                        if user.login == "Admin":
                             for key,value in admin_commands.items():
                                 print(f"{key} - {value}")
                     case "add new product":
-                        if login.login == "Admin":
+                        if user.login == "Admin":
                             pass
                     case "remove old product":
-                        if login.login == "Admin":
+                        if user.login == "Admin":
                             pass
                     case "change curent product":
-                        if login.login == "Admin":
+                        if user.login == "Admin":
                             pass
                         
                       
