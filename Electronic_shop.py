@@ -31,7 +31,7 @@ class DigitalProduct(Product):
     
 class Cart:        
     def __init__(self):
-        self.products = list()
+        self.products = []
     
     def add_product(self,product):
         self.products.append(product)
@@ -87,7 +87,7 @@ class User:
             return f"{self.name}'s balance is less then {other.name}"
         
     def user_history(self):
-        history = User.user_history_list.get(self.name, [])
+        history = User.user_history_list.get(self.login, [])
         if not history:
             print("No purchase history")
         else:
@@ -106,6 +106,7 @@ class User:
             print("You have not enought money on your balance")
 
 users = {"Admin":User("Oleg",1000000,"Admin","1234")} 
+users_cart = {}
 commands = {
     "help": "show all available commands", 
     "products": "show the list of currenyly available products",
@@ -176,7 +177,11 @@ def program_start():
                         for value in products_list.values():
                             print(f"{value.name}: prise is {value.price}$")
                     case "add product":
-                        pass
+                        if login not in users_cart:
+                            users_cart[login] = Cart()
+                        add_product = input("Witch product do you want to add?: ")
+                        if add_product in products_list:
+                            login.add_product(add_product)
                     case "remove product":
                         pass
                     case "my cart":
