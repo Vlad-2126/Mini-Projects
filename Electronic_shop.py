@@ -100,7 +100,24 @@ class User:
         else:
             print("You have not enought money on your balance")
 
-users = {"Admin":User("Oleg",1000000,"Admin","1234")}            
+users = {"Admin":User("Oleg",1000000,"Admin","1234")} 
+commands = {
+    "help": "show all available commands", 
+    "products": "show the list of currenyly available products",
+    "add product": "choose product that will be added to your cart",
+    "remove product": "choose product that will be removed from your cart",
+    "my cart": "show the list of products in your cart",
+    "checkout": "buy all your items from your cart when ready",
+    "top up balance": "add money to your wallet",
+    "history": "show a history of your orders",
+    "exit": "exit program"
+    }
+admin_commands = {
+    "admin's command": "show all available admin's commands",
+    "add new product": "adding new product",
+    "remove old product": "removing already existing product",
+    "change curent product": "change already existing product"
+}        
 
 def program_start():
     while True:
@@ -147,7 +164,8 @@ def program_start():
                 command = input("Pleas write your command: ").lower()
                 match command:
                     case "help":
-                        pass
+                        for key,value in commands.items():
+                            print(f"{key} - {value}")
                     case "products":
                         pass
                     case "add product":
@@ -164,6 +182,10 @@ def program_start():
                         pass
                     case "exit":
                         break
+                    case "admin's command":
+                        if login.login == "Admin":
+                            for key,value in admin_commands.items():
+                                print(f"{key} - {value}")
                     case "add new product":
                         if login.login == "Admin":
                             pass
