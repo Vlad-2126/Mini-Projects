@@ -185,24 +185,26 @@ def program_start():
                         if login not in users_cart:
                             users_cart[login] = Cart()
                         add_product = input("Witch product do you want to add?: ")
+                        found = False
                         for product in products_list.values():
                             if product.name.lower() == add_product.lower():
                                 users_cart[login].add_product(product)
+                                found = True
                                 break
-                        else:
+                        if not found:
                             print("There is no such a product")
                     case "remove product":
                         if login not in users_cart:
                             users_cart[login] = Cart()
                         remove_product = input("Witch product do you want to remove?: ")
-                        if remove_product not in users_cart[login].products:
-                            pass
+                        found = False
                         for product in products_list.values():
                             if product.name.lower() == remove_product.lower():
                                 users_cart[login].remove_product(product)
+                                found = True
                                 break
-                        else:
-                            print("There is no such a product")
+                        if not found:
+                            print("Ther is no such item in your cart")
                     case "my cart":
                         pass
                     case "checkout":
