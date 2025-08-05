@@ -1,8 +1,11 @@
+products_list = {}
+
 class Product:   
     def __init__(self,name,types,price,):
         self.name = name
         self.types = types
         self.price = int(price)
+        products_list["p"+str(len(products_list))] = [self.name, self.types, self.price]
 
     
     def __str__(self):
@@ -15,7 +18,9 @@ class Product:
         if isinstance(other, Product):
             return (self.name,self.types,self.price) == (other.name,other.types,other.price) 
         return False
-    
+
+p0 = Product("IPhone 15","smartphone",1000)
+p1 = Product("IPhone 14","smartphone",800)    
 class DigitalProduct(Product):
     def __init__(self, name, types, price, download_link):
         super().__init__(name, types, price)
@@ -110,7 +115,7 @@ commands = {
     "checkout": "buy all your items from your cart when ready",
     "top up balance": "add money to your wallet",
     "history": "show a history of your orders",
-    "exit": "exit program"
+    "log out": "log out program"
     }
 admin_commands = {
     "admin's command": "show all available admin's commands",
@@ -143,7 +148,8 @@ def program_start():
             ready = False
             name = input("What is your real name: ")
             users[login] = User(name,0,login,password)
-            continue
+        elif sign_in == "exit":
+            break
         else:
             while True:
                 login = input("Pleas write your login: ")
@@ -167,7 +173,8 @@ def program_start():
                         for key,value in commands.items():
                             print(f"{key} - {value}")
                     case "products":
-                        pass
+                        for value in products_list.values():
+                            print(f"{value.name}: prise is {value.price}$")
                     case "add product":
                         pass
                     case "remove product":
@@ -180,7 +187,7 @@ def program_start():
                         pass
                     case "history":
                         pass
-                    case "exit":
+                    case "log out":
                         break
                     case "admin's command":
                         if login.login == "Admin":
