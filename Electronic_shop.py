@@ -5,7 +5,7 @@ class Product:
         self.name = name
         self.types = types
         self.price = int(price)
-        products_list["p"+str(len(products_list))] = [self.name, self.types, self.price]
+        products_list["p"+str(len(products_list))] = self
 
     
     def __str__(self):
@@ -36,6 +36,10 @@ class Cart:
     def add_product(self,product):
         self.products.append(product)
         print(f"You added {product.name} in your card")
+        
+    def remove_product(self,product):
+        self.products.remove(product)
+        print(f"You removed {product.name} from your card")
     
     def __str__(self):
         return "Your cart is empty" if not self.products else f"Your cart contains: {"".join(f"{i+1}. {p}" for i,p in enumerate(self.products))}"
@@ -181,10 +185,24 @@ def program_start():
                         if login not in users_cart:
                             users_cart[login] = Cart()
                         add_product = input("Witch product do you want to add?: ")
-                        if add_product in products_list:
-                            users_cart[login].add_product(products_list[add_product])
+                        for product in products_list.values():
+                            if product.name.lower() == add_product.lower():
+                                users_cart[login].add_product(product)
+                                break
+                        else:
+                            print("There is no such a product")
                     case "remove product":
-                        pass
+                        if login not in users_cart:
+                            users_cart[login] = Cart()
+                        remove_product = input("Witch product do you want to remove?: ")
+                        if remove_product not in users_cart[login].products:
+                            pass
+                        for product in products_list.values():
+                            if product.name.lower() == remove_product.lower():
+                                users_cart[login].remove_product(product)
+                                break
+                        else:
+                            print("There is no such a product")
                     case "my cart":
                         pass
                     case "checkout":
