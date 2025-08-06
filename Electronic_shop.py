@@ -221,7 +221,15 @@ def program_start():
                                 print(f"{key} - {value}")
                     case "add new product":
                         if user.login == "Admin":
-                            pass
+                            add_product = input("Witch product do you want to add?: ")
+                            add_price = input("Write price of this object: ")
+                            add_type = input("Wich tipe thith object is?: ")
+                            found = False
+                            if add_product in products_list.values():
+                                print("This product is already exist")
+                            else:
+                                object_key = str(f"p{len(products_list)}") 
+                                object_key = Product(add_product,add_type,add_price)
                     case "remove old product":
                         if user.login == "Admin":
                             pass
