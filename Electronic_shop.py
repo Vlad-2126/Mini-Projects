@@ -1,11 +1,17 @@
 products_list = {}
 
 class Product:   
-    def __init__(self,name,types,price,):
+    def __init__(self,name,types,price):
         self.name = name
         self.types = types
         self.price = int(price)
-        products_list["p"+str(len(products_list))] = self
+    
+    @classmethod
+    def create_product(cls,name,types,price):
+        key = f"p{len(products_list)+1}"
+        product = Product(name,types,price)
+        products_list[key] = product
+        return product
 
     
     def __str__(self):
@@ -224,12 +230,12 @@ def program_start():
                             add_product = input("Witch product do you want to add?: ")
                             add_price = input("Write price of this object: ")
                             add_type = input("Wich tipe thith object is?: ")
-                            found = False
-                            if add_product in products_list.values():
-                                print("This product is already exist")
-                            else:
-                                object_key = str(f"p{len(products_list)}") 
-                                object_key = Product(add_product,add_type,add_price)
+                            for p in products_list.values():
+                                if p.name.lower() == add_product.lower():
+                                    print("This product is already exist")
+                                    break
+                        else:
+                            Product.create_product(add_product,add_price,add_type)
                     case "remove old product":
                         if user.login == "Admin":
                             pass
