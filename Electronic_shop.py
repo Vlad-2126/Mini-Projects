@@ -87,6 +87,10 @@ class User:
     def __gt__(self,other):
         return self._balance > other._balance
     
+    def top_up_balance(self,amount):
+        print(f"Your balance is now {self._balance + int(amount)}, previous balance was: {self._balance}")
+        self._balance += int(amount)
+    
     def compere_balance(self,other):
         if self._balance > other._balance:
             return f"{self.name}'s balance is greater then {other.name}"
@@ -211,11 +215,12 @@ def program_start():
                     case "my cart":
                         print(str(users_cart[login]))
                     case "checkout":
-                        pass
+                        user.checkout(users_cart[login])
                     case "top up balance":
-                        pass
+                        amount = input("How much do you want to add to your balance?: ")
+                        user.top_up_balance(amount)
                     case "history":
-                        pass
+                        user.user_history()
                     case "log out":
                         break
                     case "admin's command":
