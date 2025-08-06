@@ -47,7 +47,7 @@ class Cart:
         print(f"You removed {product.name} from your card")
     
     def __str__(self):
-        return "Your cart is empty" if not self.products else f"Your cart contains: {"".join(f"{i+1}. {p}" for i,p in enumerate(self.products))}"
+        return "Your cart is empty" if not self.products else "Your cart contains:\n"+"\n".join(f"{i+1}. {p}" for i,p in enumerate(self.products))
     
     def __delitem__(self,index):
         print(f"{self.products[index]} was removed")
@@ -112,7 +112,7 @@ class User:
         summ = sum(p.price for p in cart.products)
         if summ <= self._balance:
             self._balance -= summ
-            User.user_history_list[self.name] = cart.products.copy()
+            User.user_history_list[self.login] = cart.products.copy()
             cart.products.clear()
             print(f"Payment was successful,payed: {summ}, curent balance: {self._balance}")
         else:
@@ -144,16 +144,16 @@ def program_start():
         if sign_in == "create new account":
             ready = False
             while ready is False:
-                login = input("Pleas enter your new login: ")
+                login = input("Please enter your new login: ")
                 if login in users:
                     print("Your logi should be unique, try another one")
                     continue
                 ready = True
             ready = False
             while ready is False:
-                password = input("Pleas enter your new password: ") 
+                password = input("Please enter your new password: ") 
                 while True:
-                    password_check = input("Pleas enter your password again: ")
+                    password_check = input("Please enter your password again: ")
                     if password == password_check:
                         break
                     print("Incorrect, try again")
@@ -166,32 +166,32 @@ def program_start():
             break
         else:
             while True:
-                login = input("Pleas write your login: ")
+                login = input("Please write your login: ")
                 if login not in users:
                     print("There is no user with that login, try another one")
                     continue
                 break
             while True:
                 user = users[login]
-                password_check = input("Pleas enter your password: ")
+                password_check = input("Please enter your password: ")
                 if password_check != user.password:
                     print("There is no user with that login, try another one")
                     continue
                 break
             while True:
-                print(f"Hello {user.name}, how can I halp you? If you whant to see the list of commands, write 'help'")
+                print(f"Hello {user.name}, how can I help you? If you want to see the list of commands, write 'help'")
                 if login not in users_cart:
                     users_cart[login] = Cart()
                 if login.login == "Admin":
                     print(f"Hello {user.name}, if you forgot admin's command ")
-                command = input("Pleas write your command: ").lower()
+                command = input("Please write your command: ").lower()
                 match command:
                     case "help":
                         for key,value in commands.items():
                             print(f"{key} - {value}")
                     case "products":
                         for value in products_list.values():
-                            print(f"{value.name}: prise is {value.price}$")
+                            print(f"{value.name}: price is {value.price}$")
                     case "add product":
                         add_product = input("Witch product do you want to add?: ")
                         found = False
@@ -231,16 +231,16 @@ def program_start():
                         if user.login == "Admin":
                             add_product = input("Witch product do you want to add?: ")
                             add_price = input("Write price of this object: ")
-                            add_type = input("Wich tipe thith object is?: ")
+                            add_type = input("Wich type thith object is?: ")
                             for p in products_list.values():
                                 if p.name.lower() == add_product.lower():
                                     print("This product is already exist")
                                     break
-                        else:
-                            Product.create_product(add_product,add_price,add_type)
+                                else:
+                                    Product.create_product(add_product,add_price,add_type)
                     case "remove old product":
                         if user.login == "Admin":
-                            item_to_remove = input("Which item do you whant to remove?: ")
+                            item_to_remove = input("Which item do you want to remove?: ")
                             found = False
                             key_to_remove = None
                             for key,item in products_list.items():
@@ -254,7 +254,7 @@ def program_start():
                                 print("Ther is no such item in product list")
                     case "change curent product":
                         if user.login == "Admin":
-                            item_to_change = input("Which item do you whant to change?: ")
+                            item_to_change = input("Which item do you want to change?: ")
                             for key,item in products_list.items():
                                 if item.name.lower() == item_to_change.lower() or key.lower() == item_to_change.lower():
                                     done = False
@@ -287,25 +287,3 @@ def program_start():
                                                     continue
                                             case "done":
                                                 done = True
-                        
-                      
-
-# Testing stuff
-
-# iphone = Product("iPhone 15", "smartphone", 1200)
-# laptop = Product("MacBook Pro", "laptop", 2500)
-
-# cart = Cart()
-# cart.add_product(iphone)
-# # print(cart)
-# cart.add_product(laptop)
-# # print(cart)
-
-# print(len(cart))        # 2
-# print(cart[0])          # iPhone 15
-# print(bool(cart))       # True
-
-# user = User("Alice", 5000)
-# user.checkout(cart)     # Покупка с проверкой баланса
-
-# print(user)             # Имя и остаток баланса
