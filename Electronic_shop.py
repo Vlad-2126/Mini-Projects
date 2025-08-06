@@ -24,8 +24,8 @@ class Product:
             return (self.name,self.types,self.price) == (other.name,other.types,other.price) 
         return False
 
-p0 = Product("IPhone 15","smartphone",1000)
-p1 = Product("IPhone 14","smartphone",800)    
+Product.create_product("IPhone 15","smartphone",1000)
+Product.create_product("IPhone 14","smartphone",800)    
 class DigitalProduct(Product):
     def __init__(self, name, types, price, download_link):
         super().__init__(name, types, price)
@@ -176,6 +176,8 @@ def program_start():
                 break
             while True:
                 print(f"Hello {user.name}, how can I halp you? If you whant to see the list of commands, write 'help'")
+                if login not in users_cart:
+                    users_cart[login] = Cart()
                 if login.login == "Admin":
                     print(f"Hello {user.name}, if you forgot admin's command ")
                 command = input("Pleas write your command: ").lower()
@@ -187,8 +189,6 @@ def program_start():
                         for value in products_list.values():
                             print(f"{value.name}: prise is {value.price}$")
                     case "add product":
-                        if login not in users_cart:
-                            users_cart[login] = Cart()
                         add_product = input("Witch product do you want to add?: ")
                         found = False
                         for product in products_list.values():
@@ -199,8 +199,6 @@ def program_start():
                         if not found:
                             print("There is no such a product")
                     case "remove product":
-                        if login not in users_cart:
-                            users_cart[login] = Cart()
                         remove_product = input("Witch product do you want to remove?: ")
                         found = False
                         for product in products_list.values():
@@ -211,7 +209,7 @@ def program_start():
                         if not found:
                             print("Ther is no such item in your cart")
                     case "my cart":
-                        pass
+                        print(str(users_cart[login]))
                     case "checkout":
                         pass
                     case "top up balance":
