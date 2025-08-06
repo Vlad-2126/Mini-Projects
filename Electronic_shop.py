@@ -239,21 +239,24 @@ def program_start():
                         if user.login == "Admin":
                             item_to_remove = input("Which item do you whant to remove?: ")
                             found = False
+                            key_to_remove = None
                             for key,item in products_list.items():
                                 if item.name == item_to_remove:
                                     found = True
-                                    del products_list[key]
+                                    key_to_remove = key
                                     break
+                            if key_to_remove:
+                                del products_list[key_to_remove]
                             if not found:
-                                print("Ther is no such item in your cart")
+                                print("Ther is no such item in product list")
                     case "change curent product":
                         if user.login == "Admin":
                             item_to_change = input("Which item do you whant to change?: ")
                             for key,item in products_list.items():
-                                if item.name == item_to_change or key == item_to_change:
+                                if item.name.lower() == item_to_change.lower() or key.lower() == item_to_change.lower():
                                     done = False
                                     while not done:
-                                        property_to_change = input("Which parametr do you whant to change?: ").lower()
+                                        property_to_change = input("Which parameter do you want to change?: ").lower()
                                         match property_to_change:
                                             case "name":
                                                 name_to_change = input("Write new name")
@@ -265,7 +268,7 @@ def program_start():
                                                     continue
                                             case "type":
                                                 type_to_change = input("Write new type")
-                                                item.type = type_to_change
+                                                item.types = type_to_change
                                                 is_it_done = input("Is it done or do you want to change other parametr?: ").lower()
                                                 if is_it_done == "done":
                                                     done = True
@@ -273,7 +276,7 @@ def program_start():
                                                     continue
                                             case "price":
                                                 price_to_change = input("Write new price")
-                                                item.price = price_to_change
+                                                item.price = int(price_to_change)
                                                 is_it_done = input("Is it done or do you want to change other parametr?: ").lower()
                                                 if is_it_done == "done":
                                                     done = True
