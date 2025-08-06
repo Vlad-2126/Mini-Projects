@@ -11,7 +11,6 @@ class Product:
         key = f"p{len(products_list)+1}"
         product = Product(name,types,price)
         products_list[key] = product
-        return product
 
     
     def __str__(self):
@@ -238,10 +237,50 @@ def program_start():
                             Product.create_product(add_product,add_price,add_type)
                     case "remove old product":
                         if user.login == "Admin":
-                            pass
+                            item_to_remove = input("Which item do you whant to remove?: ")
+                            found = False
+                            for key,item in products_list.items():
+                                if item.name == item_to_remove:
+                                    found = True
+                                    del products_list[key]
+                                    break
+                            if not found:
+                                print("Ther is no such item in your cart")
                     case "change curent product":
                         if user.login == "Admin":
-                            pass
+                            item_to_change = input("Which item do you whant to change?: ")
+                            for key,item in products_list.items():
+                                if item.name == item_to_change or key == item_to_change:
+                                    done = False
+                                    while not done:
+                                        property_to_change = input("Which parametr do you whant to change?: ").lower()
+                                        match property_to_change:
+                                            case "name":
+                                                name_to_change = input("Write new name")
+                                                item.name = name_to_change
+                                                is_it_done = input("Is it done or do you want to change other parametr?: ").lower()
+                                                if is_it_done == "done":
+                                                    done = True
+                                                else:
+                                                    continue
+                                            case "type":
+                                                type_to_change = input("Write new type")
+                                                item.type = type_to_change
+                                                is_it_done = input("Is it done or do you want to change other parametr?: ").lower()
+                                                if is_it_done == "done":
+                                                    done = True
+                                                else:
+                                                    continue
+                                            case "price":
+                                                price_to_change = input("Write new price")
+                                                item.price = price_to_change
+                                                is_it_done = input("Is it done or do you want to change other parametr?: ").lower()
+                                                if is_it_done == "done":
+                                                    done = True
+                                                else:
+                                                    continue
+                                            case "done":
+                                                done = True
                         
                       
 
