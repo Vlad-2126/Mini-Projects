@@ -1,3 +1,5 @@
+
+from abc import ABC, abstractmethod
 machin_dict = {}
 customer_dict = {}
 
@@ -24,3 +26,29 @@ class DrillRig(Machine):
         super().__init__(id, name, price_per_day)
         self.drilling_depth = drilling_depth
         self.power = power
+        
+class MachinFactory(ABC):
+    @abstractmethod
+    def create_machin(self,*args):
+        pass
+
+class ExcavatorFactory(MachinFactory):
+    def create_machin(self, id, name, price_per_day, transport_spead, bucket_capacity):
+        machin_dict[id] = Excavator(id, name, price_per_day, transport_spead, bucket_capacity)
+
+class CraneFactory(MachinFactory):
+    def create_machin(self, id, name, price_per_day, load_capacity, boom_reach):
+        machin_dict[id] = Crane(id, name, price_per_day, load_capacity, boom_reach)
+        
+class DrillRigFactory(MachinFactory):
+    def create_machin(self, id, name, price_per_day, drilling_depth, power):
+        machin_dict[id] = DrillRig(id, name, price_per_day, drilling_depth, power)
+
+def create_product(factory : MachinFactory,):
+    transport = factory.create_machin()
+    print(machin_dict)
+    return transport
+
+create_product(ExcavatorFactory(1000,"Bob Cat Excavator", 1000, 10, 1))
+create_product(CraneFactory(1000,"Bob Cat Excavator", 1000, 10, 1))
+create_product(DrillRigFactory(1000,"Bob Cat Excavator", 1000, 10, 1))
