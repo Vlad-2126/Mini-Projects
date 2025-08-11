@@ -7,7 +7,18 @@ class Machine(ABC):
     def __init__(self,id,name,price_per_day):
         self.id = id
         self.name = name
+        self._price_per_day = 0
         self.price_per_day = price_per_day
+    
+    @property
+    def price_per_day(self):
+        return self._price_per_day
+    
+    @price_per_day.setter
+    def price_per_day(self,value):
+        if value <= 0:
+            raise ValueError("Prise for rent cun`t be less than 0")
+        self._price_per_day = value
     
     @abstractmethod
     def __str__(self):
@@ -52,25 +63,25 @@ class DrillRig(Machine):
     Product drilling depth: {self.drilling_depth}
     Product power: {self.power}"""
         
-class MachinFactory(ABC):
+class MachineFactory(ABC):
     @abstractmethod
     def create_machin(self,*args):
         pass
 
-class ExcavatorFactory(MachinFactory):
+class ExcavatorFactory(MachineFactory):
     def create_machin(self, id, name, price_per_day, transport_spead, bucket_capacity):
         machin_dict[id] = Excavator(id, name, price_per_day, transport_spead, bucket_capacity)
 
-class CraneFactory(MachinFactory):
+class CraneFactory(MachineFactory):
     def create_machin(self, id, name, price_per_day, load_capacity, boom_reach):
         machin_dict[id] = Crane(id, name, price_per_day, load_capacity, boom_reach)
         
-class DrillRigFactory(MachinFactory):
+class DrillRigFactory(MachineFactory):
     def create_machin(self, id, name, price_per_day, drilling_depth, power):
         machin_dict[id] = DrillRig(id, name, price_per_day, drilling_depth, power)
 
-def create_product(factory : MachinFactory,):
-    if factory not in machin_dict:
+def create_product(factory : MachineFactory,):
+    if factory not in machin_dict.values():
         raise InvalidProductNameError("This product type is absent")
     transport = factory.create_machin()
     print(machin_dict)
