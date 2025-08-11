@@ -79,26 +79,33 @@ class DrillRig(Machine):
 class MachineFactory(ABC):
     def register_machine(self,machine):
         machine_dict[machine.id] = machine
+        
+    def is_id_unique(self,id):
+        if id in machine_dict.keys():
+            raise InvalidProductNameError("Id must be unique")
     
     @abstractmethod
     def create_machine(self,*args):
         pass
 
 class ExcavatorFactory(MachineFactory):
-    def create_machine(self, id, name, price_per_day, transport_spead, bucket_capacity):
-        excavator = Excavator(id, name, price_per_day, transport_spead, bucket_capacity)
+    def create_machine(self, id, name, price_per_day, transport_speed, bucket_capacity):
+        excavator = Excavator(id, name, price_per_day, transport_speed, bucket_capacity)
+        self.is_id_unique(id)
         self.register_machine(excavator)
         return excavator
 
 class CraneFactory(MachineFactory):
     def create_machine(self, id, name, price_per_day, load_capacity, boom_reach):
         crane = Crane(id, name, price_per_day, load_capacity, boom_reach)
+        self.is_id_unique(id)
         self.register_machine(crane)
         return crane
         
 class DrillRigFactory(MachineFactory):
     def create_machine(self, id, name, price_per_day, drilling_depth, power):
         drill_rig = DrillRig(id, name, price_per_day, drilling_depth, power)
+        self.is_id_unique(id)
         self.register_machine(drill_rig)
         return drill_rig
 
