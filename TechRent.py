@@ -5,8 +5,6 @@ customer_dict = {}
 
 class Machine(ABC):
     def __init__(self,id,name,price_per_day):
-        if id in machine_dict.keys():
-            raise ValueError("Id must be unique")
         self.id = id
         self.name = name
         self._price_per_day = 0
@@ -19,7 +17,7 @@ class Machine(ABC):
     @price_per_day.setter
     def price_per_day(self,value):
         if value <= 0:
-            raise ValueError("Prise for rent cun`t be less than 0")
+            raise ValueError("Price for rent cun`t be less than 0")
         self._price_per_day = value
     
     @abstractmethod
@@ -79,6 +77,9 @@ class DrillRig(Machine):
         return f"Name: {self.name}, id: {self.id}, price: {self.price_per_day}"
         
 class MachineFactory(ABC):
+    def register_machine(self,machine):
+        machine_dict[machine.id] = machine
+    
     @abstractmethod
     def create_machine(self,*args):
         pass
@@ -86,25 +87,29 @@ class MachineFactory(ABC):
 class ExcavatorFactory(MachineFactory):
     def create_machine(self, id, name, price_per_day, transport_spead, bucket_capacity):
         excavator = Excavator(id, name, price_per_day, transport_spead, bucket_capacity)
-        machine_dict[id] = excavator
+        self.register_machine(excavator)
         return excavator
 
 class CraneFactory(MachineFactory):
     def create_machine(self, id, name, price_per_day, load_capacity, boom_reach):
         crane = Crane(id, name, price_per_day, load_capacity, boom_reach)
-        machine_dict[id] = crane
+        self.register_machine(crane)
         return crane
         
 class DrillRigFactory(MachineFactory):
     def create_machine(self, id, name, price_per_day, drilling_depth, power):
         drill_rig = DrillRig(id, name, price_per_day, drilling_depth, power)
-        machine_dict[id] = drill_rig
+        self.register_machine(drill_rig)
         return drill_rig
 
 def create_product(factory : MachineFactory, *args, **kwargs):
-    transport = factory.create_machine(*args, **kwargs)
-    print(machine_dict)
-    return transport
+    try:
+        if not isinstance(factory,MachineFactory):
+            raise InvalidProductNameError("Unknown type of product")
+        transport = factory.create_machine(*args, **kwargs)
+        return transport
+    except ValueError as e:
+        raise InvalidProductNameError(f"Error during product creation: {e}")
 
 class InvalidProductNameError(Exception):
     pass
