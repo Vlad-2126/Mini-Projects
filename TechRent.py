@@ -3,17 +3,28 @@ from abc import ABC, abstractmethod
 machin_dict = {}
 customer_dict = {}
 
-class Machine:
+class Machine(ABC):
     def __init__(self,id,name,price_per_day):
         self.id = id
         self.name = name
         self.price_per_day = price_per_day
+    
+    @abstractmethod
+    def __str__(self):
+        pass
 
 class Excavator(Machine):
     def __init__(self, id, name, price_per_day, transport_spead, bucket_capacity):
         super().__init__(id, name, price_per_day)
         self.transport_spead = transport_spead
         self.bucket_capacity = bucket_capacity
+    
+    def __str__(self):
+        return f"""Product id: {self.id}
+    Product name: {self.name}
+    Product rent price per day: {self.price_per_day}
+    Product transporting spead: {self.transport_spead}
+    Product bucket capacity: {self.bucket_capacity}"""
 
 class Crane(Machine):
     def __init__(self, id, name, price_per_day, load_capacity, boom_reach):
@@ -21,11 +32,25 @@ class Crane(Machine):
         self.load_capacity = load_capacity
         self.boom_reach = boom_reach
         
+    def __str__(self):
+        return f"""Product id: {self.id}
+    Product name: {self.name}
+    Product rent price per day: {self.price_per_day}
+    Product load capacity: {self.load_capacity}
+    Product boom reach: {self.boom_reach}"""
+        
 class DrillRig(Machine):
     def __init__(self, id, name, price_per_day, drilling_depth, power):
         super().__init__(id, name, price_per_day)
         self.drilling_depth = drilling_depth
         self.power = power
+        
+    def __str__(self):
+        return f"""Product id: {self.id}
+    Product name: {self.name}
+    Product rent price per day: {self.price_per_day}
+    Product drilling depth: {self.drilling_depth}
+    Product power: {self.power}"""
         
 class MachinFactory(ABC):
     @abstractmethod
