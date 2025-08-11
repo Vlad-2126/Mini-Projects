@@ -40,7 +40,7 @@ class Excavator(Machine):
         return f"""Product id: {self.id}
     Product name: {self.name}
     Product rent price per day: {self.price_per_day}
-    Product transporting spead: {self.transport_speed}
+    Product transporting speed: {self.transport_speed}
     Product bucket capacity: {self.bucket_capacity}"""
     
     def __repr__(self):
@@ -80,25 +80,31 @@ class DrillRig(Machine):
         
 class MachineFactory(ABC):
     @abstractmethod
-    def create_machien(self,*args):
+    def create_machine(self,*args):
         return self
 
 class ExcavatorFactory(MachineFactory):
-    def create_machien(self, id, name, price_per_day, transport_spead, bucket_capacity):
-        machin_dict[id] = Excavator(id, name, price_per_day, transport_spead, bucket_capacity)
+    def create_machine(self, id, name, price_per_day, transport_spead, bucket_capacity):
+        excavator = Excavator(id, name, price_per_day, transport_spead, bucket_capacity)
+        machin_dict[id] = excavator
+        return excavator
 
 class CraneFactory(MachineFactory):
-    def create_machien(self, id, name, price_per_day, load_capacity, boom_reach):
-        machin_dict[id] = Crane(id, name, price_per_day, load_capacity, boom_reach)
+    def create_machine(self, id, name, price_per_day, load_capacity, boom_reach):
+        crane = Crane(id, name, price_per_day, load_capacity, boom_reach)
+        machin_dict[id] = crane
+        return crane
         
 class DrillRigFactory(MachineFactory):
-    def create_machien(self, id, name, price_per_day, drilling_depth, power):
-        machin_dict[id] = DrillRig(id, name, price_per_day, drilling_depth, power)
+    def create_machine(self, id, name, price_per_day, drilling_depth, power):
+        drill_rig = DrillRig(id, name, price_per_day, drilling_depth, power)
+        machin_dict[id] = drill_rig
+        return drill_rig
 
 def create_product(factory : MachineFactory, *args, **kwargs):
     if not isinstance(factory, MachineFactory):
         raise InvalidProductNameError("This product type is absent")
-    transport = factory.create_machien(*args, **kwargs)
+    transport = factory.create_machine(*args, **kwargs)
     print(machin_dict)
     return transport
 
@@ -106,6 +112,7 @@ class InvalidProductNameError(Exception):
     pass
 
 
-create_product(NewcavatorFactory(),"id1000","Bob Cat Excavator", 1000, 10, 1)
-create_product(CraneFactory(),"id2000","Bob Cat Excavator", 1000, 10, 1)
-create_product(DrillRigFactory(),"id3000","Bob Cat Excavator", 1000, 10, 1)
+# create_product(ExcavatorFactory(),"id1000","Bob Cat Excavator", 1000, 10, 1)
+# create_product(CraneFactory(),"id2000","Bob Cat Excavator", 1000, 10, 1)
+# create_product(DrillRigFactory(),"id3000","Bob Cat Excavator", 1000, 10, 1)
+
