@@ -1,11 +1,11 @@
 
 from abc import ABC, abstractmethod
-machin_dict = {}
+machine_dict = {}
 customer_dict = {}
 
 class Machine(ABC):
     def __init__(self,id,name,price_per_day):
-        if id in machin_dict.keys():
+        if id in machine_dict.keys():
             raise ValueError("Id must be unique")
         self.id = id
         self.name = name
@@ -81,31 +81,29 @@ class DrillRig(Machine):
 class MachineFactory(ABC):
     @abstractmethod
     def create_machine(self,*args):
-        return self
+        pass
 
 class ExcavatorFactory(MachineFactory):
     def create_machine(self, id, name, price_per_day, transport_spead, bucket_capacity):
         excavator = Excavator(id, name, price_per_day, transport_spead, bucket_capacity)
-        machin_dict[id] = excavator
+        machine_dict[id] = excavator
         return excavator
 
 class CraneFactory(MachineFactory):
     def create_machine(self, id, name, price_per_day, load_capacity, boom_reach):
         crane = Crane(id, name, price_per_day, load_capacity, boom_reach)
-        machin_dict[id] = crane
+        machine_dict[id] = crane
         return crane
         
 class DrillRigFactory(MachineFactory):
     def create_machine(self, id, name, price_per_day, drilling_depth, power):
         drill_rig = DrillRig(id, name, price_per_day, drilling_depth, power)
-        machin_dict[id] = drill_rig
+        machine_dict[id] = drill_rig
         return drill_rig
 
 def create_product(factory : MachineFactory, *args, **kwargs):
-    if not isinstance(factory, MachineFactory):
-        raise InvalidProductNameError("This product type is absent")
     transport = factory.create_machine(*args, **kwargs)
-    print(machin_dict)
+    print(machine_dict)
     return transport
 
 class InvalidProductNameError(Exception):
