@@ -70,10 +70,16 @@ class DrillRigFactory(MachinFactory):
         machin_dict[id] = DrillRig(id, name, price_per_day, drilling_depth, power)
 
 def create_product(factory : MachinFactory,):
+    if factory not in machin_dict:
+        raise InvalidProductNameError("This product type is absent")
     transport = factory.create_machin()
     print(machin_dict)
     return transport
 
+class InvalidProductNameError(Exception):
+    pass
+
+
 create_product(ExcavatorFactory(1000,"Bob Cat Excavator", 1000, 10, 1))
-create_product(CraneFactory(1000,"Bob Cat Excavator", 1000, 10, 1))
-create_product(DrillRigFactory(1000,"Bob Cat Excavator", 1000, 10, 1))
+# create_product(CraneFactory(1000,"Bob Cat Excavator", 1000, 10, 1))
+# create_product(DrillRigFactory(1000,"Bob Cat Excavator", 1000, 10, 1))
