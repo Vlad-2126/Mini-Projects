@@ -131,6 +131,16 @@ class Customer:
         self.balance = balance
         self.rented_machines = []
     
+    def __str__(self):
+        return f"""Customer's info
+    id: {self.id}
+    name: {self.name}
+    balance: {self.balance}
+    rented machines: {self.rented_machines}"""
+    
+    def __repr__(self):
+        return f"id:{self.id}, name: {self.name}, balance: {self.balance}, rented machines: {self.rented_machines}"
+    
     @property
     def balance(self):
         return self._balance
@@ -151,7 +161,9 @@ class Customer:
             if final_price <= self._balance:
                 self.balance -= final_price
                 self.rented_machines.append(machine_dict[machin_id])
-                
+                print(f"Machine {machine_dict[machin_id].name} was successfully rented for {days} days.")
+            else:
+                raise ValueError("Not enought money on your balance") 
         else:
             raise ValueError("Current machin does not exist")
 
