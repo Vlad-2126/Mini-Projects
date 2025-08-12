@@ -234,7 +234,7 @@ class Company(Customer):
         return f"id:{self.id}, name: {self.name}, balance: {self.balance}, rented machines: {self.rented_machines}, industry: {self.industry}, employeecount: {self.employee_count}"
     
 
-class CustomerFabrick(ABC):
+class CustomerFactory(ABC):
     def add_customer(self,customer):
         customer_dict[customer.id] = customer
     
@@ -245,6 +245,26 @@ class CustomerFabrick(ABC):
     @abstractmethod
     def create_customer(self,*args):
         pass
+
+class PhysicalPersonFactory(CustomerFactory):
+    def create_customer(self, id, name, balance, passport_number, age):
+        physical_person = PhysicalPerson(id, name, balance, passport_number, age)
+        self.is_id_unique(id)
+        self.add_customer(physical_person)
+        return physical_person
+class LegalEntityFactory(CustomerFactory):
+    def create_customer(self, id, name, balance, registration_number, tax_id):
+        legal_entity = PhysicalPerson(id, name, balance, registration_number, tax_id)
+        self.is_id_unique(id)
+        self.add_customer(legal_entity)
+        return legal_entity
+
+class CompanyFactory(CustomerFactory):
+    def create_customer(self, id, name, balance, industry, employee_count):
+        company = PhysicalPerson(id, name, balance, industry, employee_count)
+        self.is_id_unique(id)
+        self.add_customer(company)
+        return company
 
 class InvalidProductNameError(Exception):
     pass
