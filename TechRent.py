@@ -118,6 +118,23 @@ def create_product(factory : MachineFactory, *args, **kwargs):
     except ValueError as e:
         raise InvalidProductNameError(f"Error during product creation: {e}")
 
+class Customer:
+    def __init__(self, id, name, balance, rented_machines):
+        self.id = id
+        self.name = name
+        self._balance = 0
+        self.balance = balance
+        self.rented_machines = rented_machines
+    
+    @property
+    def balance(self):
+        return self._balance
+    
+    @balance.setter
+    def balance(self,value):
+        if value >=0:
+            self._balance = value
+
 class InvalidProductNameError(Exception):
     pass
 
