@@ -120,12 +120,7 @@ def create_product(factory : MachineFactory, *args, **kwargs):
 
 class Customer:
     def __init__(self, id, name, balance):
-        try:
-            if id in customer_dict.keys():
-                raise InvalidCustomerNameError("Customer id must be unique")
-            self.id = id
-        except ValueError as e:
-            raise InvalidCustomerNameError(f"Error during customer creation: {e}")
+        self.id = id
         self.name = name
         self._balance = 0
         self.balance = balance
@@ -147,30 +142,109 @@ class Customer:
     
     @balance.setter
     def balance(self,value):
-        if value >=0:
-            self._balance = value
+        if value < 0:
+            raise ValueError("Balance can not be negative")
+        self._balance = value
     
     def top_up_balance(self, amount):
         if amount <= 0:
             raise ValueError("Amount can not be negative")
         self._balance += amount
     
-    def rent_machine(self,machin_id,days):
-        if machin_id in machine_dict.keys():
-            final_price = days*machine_dict[machin_id].price_per_day
+    def rent_machine(self,machine_id,days):
+        if machine_id in machine_dict.keys():
+            if days<=0:
+                raise ValueError("You can not rent machine for less than one day")
+            final_price = days*machine_dict[machine_id].price_per_day
             if final_price <= self._balance:
                 self.balance -= final_price
-                self.rented_machines.append(machine_dict[machin_id])
-                print(f"Machine {machine_dict[machin_id].name} was successfully rented for {days} days.")
+                self.rented_machines.append(machine_id)
+                print(f"Machine {machine_dict[machine_id].name} was successfully rented for {days} days.")
             else:
                 raise ValueError("Not enought money on your balance") 
         else:
             raise ValueError("Current machin does not exist")
 
-def add_customer(id, name, balance = 0):
-    customer = Customer(id,name,balance)
-    customer_dict[id] = customer
-    return customer
+class PhysicalPerson(Customer):
+    def __init__(self, id, name, balance, passport_number, age):
+        super().__init__(id, name, balance)
+        self.passport_number = passport_number
+        self._age = 0
+        self.age = age
+    
+    @property
+    def age(self):
+        return self._age
+    
+    @age.setter()
+    def age(self,value):
+        if int(value) < 18:
+            raise ValueError("Minors can not be physical person")
+        self._age = value
+    
+    def __str__(self):
+        return f"""Customer's info
+    id: {self.id}
+    name: {self.name}
+    balance: {self.balance}
+    rented machines: {self.rented_machines}
+    passport number: {self.passport_number}
+    age: {self.age}"""
+    
+    def __repr__(self):
+        return f"id:{self.id}, name: {self.name}, balance: {self.balance}, rented machines: {self.rented_machines}, passport number: {self.passport_number}, age: {self.age}"
+    
+
+class LegalEntity(Customer):
+    def __init__(self, id, name, balance, registration_number, tax_id):
+        super().__init__(id, name, balance)
+        self.registration_number = registration_number
+        self.tax_id = tax_id
+    
+    def __str__(self):
+        return f"""Customer's info
+    id: {self.id}
+    name: {self.name}
+    balance: {self.balance}
+    rented machines: {self.rented_machines}
+    registration number: {self.registration_number}
+    tax id: {self.tax_id}
+    """
+    
+    def __repr__(self):
+        return f"id:{self.id}, name: {self.name}, balance: {self.balance}, rented machines: {self.rented_machines}, registration number: {self.registration_number}, tax id: {self.tax_id}"
+    
+class Company(Customer):
+    def __init__(self, id, name, balance, industry, employee_count):
+        super().__init__(id, name, balance)
+        self.industry = industry   
+        self.employee_count = employee_count
+    
+    def __str__(self):
+        return f"""Customer's info
+    id: {self.id}
+    name: {self.name}
+    balance: {self.balance}
+    rented machines: {self.rented_machines}
+    industry: {self.industry}
+    employee count: {self.employee_count}
+    """
+    
+    def __repr__(self):
+        return f"id:{self.id}, name: {self.name}, balance: {self.balance}, rented machines: {self.rented_machines}, industry: {self.industry}, employeecount: {self.employee_count}"
+    
+
+class CustomerFabrick(ABC):
+    def add_customer(self,customer):
+        customer_dict[customer.id] = customer
+    
+    def is_id_unique(self,id):
+        if id in customer_dict.keys():
+            raise InvalidCustomerNameError("Customer id must be unique")
+    
+    @abstractmethod
+    def create_customer(self,*args):
+        pass
 
 class InvalidProductNameError(Exception):
     pass
