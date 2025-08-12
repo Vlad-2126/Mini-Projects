@@ -120,7 +120,12 @@ def create_product(factory : MachineFactory, *args, **kwargs):
 
 class Customer:
     def __init__(self, id, name, balance, rented_machines):
-        self.id = id
+        try:
+            if id in customer_dict.keys():
+                raise InvalidCustomerNameError("Customer id must be unique")
+            self.id = id
+        except ValueError as e:
+            raise InvalidCustomerNameError(f"Error during customer creation: {e}")
         self.name = name
         self._balance = 0
         self.balance = balance
@@ -134,8 +139,16 @@ class Customer:
     def balance(self,value):
         if value >=0:
             self._balance = value
+    
+    def top_up_balance(self, amount):
+        if amount <= 0:
+            raise ValueError("Amount can not be negative")
+        self._balance += amount
 
 class InvalidProductNameError(Exception):
+    pass
+
+class InvalidCustomerNameError(Exception):
     pass
 
 
