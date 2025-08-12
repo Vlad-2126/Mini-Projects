@@ -163,7 +163,7 @@ class Customer:
             else:
                 raise ValueError("Not enought money on your balance") 
         else:
-            raise ValueError("Current machin does not exist")
+            raise ValueError("Current machine does not exist")
 
 class PhysicalPerson(Customer):
     def __init__(self, id, name, balance, passport_number, age):
@@ -231,7 +231,7 @@ class Company(Customer):
     """
     
     def __repr__(self):
-        return f"id:{self.id}, name: {self.name}, balance: {self.balance}, rented machines: {self.rented_machines}, industry: {self.industry}, employeecount: {self.employee_count}"
+        return f"id:{self.id}, name: {self.name}, balance: {self.balance}, rented machines: {self.rented_machines}, industry: {self.industry}, employee count: {self.employee_count}"
     
 
 class CustomerFactory(ABC):
@@ -240,7 +240,7 @@ class CustomerFactory(ABC):
     
     def is_id_unique(self,id):
         if id in customer_dict.keys():
-            raise InvalidCustomerNameError("Customer id must be unique")
+            raise InvalidCustomerDataError("Customer id must be unique")
     
     @abstractmethod
     def create_customer(self,*args):
@@ -248,28 +248,28 @@ class CustomerFactory(ABC):
 
 class PhysicalPersonFactory(CustomerFactory):
     def create_customer(self, id, name, balance, passport_number, age):
-        physical_person = PhysicalPerson(id, name, balance, passport_number, age)
         self.is_id_unique(id)
+        physical_person = PhysicalPerson(id, name, balance, passport_number, age)
         self.add_customer(physical_person)
         return physical_person
 class LegalEntityFactory(CustomerFactory):
     def create_customer(self, id, name, balance, registration_number, tax_id):
-        legal_entity = PhysicalPerson(id, name, balance, registration_number, tax_id)
         self.is_id_unique(id)
+        legal_entity = LegalEntity(id, name, balance, registration_number, tax_id)
         self.add_customer(legal_entity)
         return legal_entity
 
 class CompanyFactory(CustomerFactory):
     def create_customer(self, id, name, balance, industry, employee_count):
-        company = PhysicalPerson(id, name, balance, industry, employee_count)
         self.is_id_unique(id)
+        company = Company(id, name, balance, industry, employee_count)
         self.add_customer(company)
         return company
 
 class InvalidProductNameError(Exception):
     pass
 
-class InvalidCustomerNameError(Exception):
+class InvalidCustomerDataError(Exception):
     pass
 
 
