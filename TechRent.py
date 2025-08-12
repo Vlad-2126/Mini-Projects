@@ -176,7 +176,7 @@ class PhysicalPerson(Customer):
     def age(self):
         return self._age
     
-    @age.setter()
+    @age.setter
     def age(self,value):
         if int(value) < 18:
             raise ValueError("Minors can not be physical person")
