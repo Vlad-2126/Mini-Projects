@@ -118,6 +118,26 @@ def create_product(factory : MachineFactory, *args, **kwargs):
     except ValueError as e:
         raise InvalidProductNameError(f"Error during product creation: {e}")
 
+class ProductManager:
+    @staticmethod
+    def create_product(factory : MachineFactory, *args, **kwargs):
+        try:
+            if not isinstance(factory,MachineFactory):
+                raise InvalidProductNameError("Unknown type of product")
+            transport = factory.create_machine(*args, **kwargs)
+            return transport
+        except ValueError as e:
+            raise InvalidProductNameError(f"Error during product creation: {e}")
+    
+    @staticmethod
+    def machine_rent():
+        pass
+    
+    @staticmethod
+    def is_available(id):
+        pass
+    
+
 class Customer:
     def __init__(self, id, name, balance):
         self.id = id
@@ -267,6 +287,9 @@ class CompanyFactory(CustomerFactory):
         return company
 
 class InvalidProductNameError(Exception):
+    pass
+
+class ProductNotAvailable(Exception):
     pass
 
 class InvalidCustomerDataError(Exception):
