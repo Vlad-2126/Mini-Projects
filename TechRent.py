@@ -119,7 +119,7 @@ def create_product(factory : MachineFactory, *args, **kwargs):
         raise InvalidProductNameError(f"Error during product creation: {e}")
 
 class Customer:
-    def __init__(self, id, name, balance, rented_machines):
+    def __init__(self, id, name, balance):
         try:
             if id in customer_dict.keys():
                 raise InvalidCustomerNameError("Customer id must be unique")
@@ -129,7 +129,7 @@ class Customer:
         self.name = name
         self._balance = 0
         self.balance = balance
-        self.rented_machines = rented_machines
+        self.rented_machines = []
     
     @property
     def balance(self):
@@ -144,6 +144,21 @@ class Customer:
         if amount <= 0:
             raise ValueError("Amount can not be negative")
         self._balance += amount
+    
+    def rent_machine(self,machin_id,days):
+        if machin_id in machine_dict.keys():
+            final_price = days*machine_dict[machin_id].price_per_day
+            if final_price <= self._balance:
+                self.balance -= final_price
+                self.rented_machines.append(machine_dict[machin_id])
+                
+        else:
+            raise ValueError("Current machin does not exist")
+
+def add_customer(id, name, balance = 0):
+    customer = Customer(id,name,balance)
+    customer_dict[id] = customer
+    return customer
 
 class InvalidProductNameError(Exception):
     pass
