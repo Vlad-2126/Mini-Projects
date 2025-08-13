@@ -130,12 +130,32 @@ class ProductManager:
             raise InvalidProductNameError(f"Error during product creation: {e}")
     
     @staticmethod
-    def machine_rent():
-        pass
+    def is_not_available(id):
+        for item in customer_dict.values():
+            for machines_id in item.rented_machines:
+                if id == machines_id:
+                    result = item
+                    return result
+                else:
+                    return False
     
     @staticmethod
-    def is_available(id):
-        pass
+    def machine_rent(customer_id,machine_id,days):
+        if customer_id not in customer_dict.keys():
+            raise InvalidCustomerDataError("Current user does not exist")
+        is_available = ProductManager.is_not_available(id)
+        if is_available:
+            raise InvalidProductDataError("This machine is currently rented and can not be rented agein")
+        customer = customer_dict[customer_id]
+        customer.rent_machine(machine_id,days)
+    
+    @staticmethod
+    def return_rent(id):
+        is_available = ProductManager.is_not_available(id)
+        if not is_available:
+            raise InvalidProductDataError("This machine is not rented and can not be returned")
+        else:
+            is_available.remove(id)
     
 
 class Customer:
@@ -293,6 +313,9 @@ class ProductNotAvailable(Exception):
     pass
 
 class InvalidCustomerDataError(Exception):
+    pass
+
+class InvalidProductDataError(Exception):
     pass
 
 
