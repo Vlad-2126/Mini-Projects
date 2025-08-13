@@ -90,22 +90,22 @@ class MachineFactory(ABC):
 
 class ExcavatorFactory(MachineFactory):
     def create_machine(self, id, name, price_per_day, transport_speed, bucket_capacity):
-        excavator = Excavator(id, name, price_per_day, transport_speed, bucket_capacity)
         self.is_id_unique(id)
+        excavator = Excavator(id, name, price_per_day, transport_speed, bucket_capacity)
         self.register_machine(excavator)
         return excavator
 
 class CraneFactory(MachineFactory):
     def create_machine(self, id, name, price_per_day, load_capacity, boom_reach):
-        crane = Crane(id, name, price_per_day, load_capacity, boom_reach)
         self.is_id_unique(id)
+        crane = Crane(id, name, price_per_day, load_capacity, boom_reach)
         self.register_machine(crane)
         return crane
         
 class DrillRigFactory(MachineFactory):
     def create_machine(self, id, name, price_per_day, drilling_depth, power):
-        drill_rig = DrillRig(id, name, price_per_day, drilling_depth, power)
         self.is_id_unique(id)
+        drill_rig = DrillRig(id, name, price_per_day, drilling_depth, power)
         self.register_machine(drill_rig)
         return drill_rig
 
@@ -130,32 +130,28 @@ class ProductManager:
             raise InvalidProductNameError(f"Error during product creation: {e}")
     
     @staticmethod
-    def is_not_available(id):
-        for item in customer_dict.values():
-            for machines_id in item.rented_machines:
-                if id == machines_id:
-                    result = item
-                    return result
-                else:
-                    return False
+    def is_not_available(machine_id):
+        for customer in customer_dict.values():
+            if machine_id in customer.rented_machines:
+                return customer
+        return None
     
     @staticmethod
     def machine_rent(customer_id,machine_id,days):
-        if customer_id not in customer_dict.keys():
+        if customer_id not in customer_dict:
             raise InvalidCustomerDataError("Current user does not exist")
-        is_available = ProductManager.is_not_available(id)
-        if is_available:
+        if ProductManager.is_not_available(machine_id):
             raise InvalidProductDataError("This machine is currently rented and can not be rented agein")
         customer = customer_dict[customer_id]
         customer.rent_machine(machine_id,days)
     
     @staticmethod
-    def return_rent(id):
-        is_available = ProductManager.is_not_available(id)
+    def return_rent(machine_id):
+        is_available = ProductManager.is_not_available(machine_id)
         if not is_available:
             raise InvalidProductDataError("This machine is not rented and can not be returned")
         else:
-            is_available.remove(id)
+            is_available.rent_machine.remove(machine_id)
     
 
 class Customer:
