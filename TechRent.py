@@ -141,17 +141,17 @@ class ProductManager:
         if customer_id not in customer_dict:
             raise InvalidCustomerDataError("Current user does not exist")
         if ProductManager.is_not_available(machine_id):
-            raise InvalidProductDataError("This machine is currently rented and can not be rented agein")
+            raise InvalidProductDataError("This machine is currently rented and can not be rented again")
         customer = customer_dict[customer_id]
         customer.rent_machine(machine_id,days)
     
     @staticmethod
     def return_rent(machine_id):
-        is_available = ProductManager.is_not_available(machine_id)
-        if not is_available:
+        renting_customer = ProductManager.is_not_available(machine_id)
+        if not renting_customer:
             raise InvalidProductDataError("This machine is not rented and can not be returned")
         else:
-            is_available.rent_machine.remove(machine_id)
+            renting_customer.rented_machines.remove(machine_id)
     
 
 class Customer:
@@ -302,6 +302,14 @@ class CompanyFactory(CustomerFactory):
         self.add_customer(company)
         return company
 
+class Transaction:
+    transaction_dict = {}
+    
+    def __init__(self,transaction_id,transaction_type,data, amount):
+        self.transaction_id = transaction_id
+        self.transaction_type = transaction_type
+        self.data = data
+        amount = amount
 class InvalidProductNameError(Exception):
     pass
 
