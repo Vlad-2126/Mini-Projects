@@ -1,5 +1,6 @@
 
 from abc import ABC, abstractmethod
+from datetime import datetime
 machine_dict = {}
 customer_dict = {}
 
@@ -186,15 +187,20 @@ class Customer:
         if amount <= 0:
             raise ValueError("Amount can not be negative")
         self._balance += amount
+
+# """Rent Machine"""
     
     def rent_machine(self,machine_id,days):
         if machine_id in machine_dict.keys():
             if days<=0:
                 raise ValueError("You can not rent machine for less than one day")
-            final_price = days*machine_dict[machine_id].price_per_day
+            dailly_rate = machine_dict[machine_id].price_per_day
+            final_price = days*dailly_rate
             if final_price <= self._balance:
                 self.balance -= final_price
                 self.rented_machines.append(machine_id)
+                transaction = RentalTransactionFactory.create_transacrion(self, final_price, days, self.id, machine_id, dailly_rate)
+                TransactionFactory.add_transaction(self,transaction)
                 print(f"Machine {machine_dict[machine_id].name} was successfully rented for {days} days.")
             else:
                 raise ValueError("Not enought money on your balance") 
@@ -305,21 +311,69 @@ class CompanyFactory(CustomerFactory):
 class Transaction:
     transaction_dict = {}
     
-    def __init__(self,transaction_id,transaction_type,data, amount):
-        self.transaction_id = transaction_id
-        self.transaction_type = transaction_type
-        self.data = data
-        amount = amount
+    def __init__(self, amount):
+        self.transaction_id = None 
+        self.transaction_type = None
+        self.date = datetime.now()
+        self.amount = amount
+        self.details = []
+    
+    def is_id_unique(self,id):
+        if id in Transaction.transaction_dict.keys():
+            raise InvalidTransactionDataError("ID must be unique")
+    
+    def transaction_id_generator(self):
+        t_id = []
+        if self.transaction_type == "rental":
+            t_id.append("01")
+        elif self.transaction_type == "deposit":
+            t_id.append("02")
+        else:
+            raise ValueError("Unidentified transaktion type")
+        t_id.append(str(datetime.now()).replace("-","").replace(" ","").replace(":","").replace(".",""))
+        result = "".join(t_id)
+        self.is_id_unique(result)
+        self.transaction_id = result
+
+class RentalTransaction(Transaction):
+    def __init__(self, amount):
+        super().__init__(amount)
+        
+class DepositTransaction(Transaction):
+    def __init__(self, amount):
+        super().__init__(amount)
+class TransactionFactory(ABC):
+    def add_transaction(self,transaction):
+        Transaction.transaction_dict[transaction.transaction_id] = transaction
+    
+    @abstractmethod
+    def create_transacrion(self,*args):
+        pass
+
+class RentalTransactionFactory(TransactionFactory):
+    def create_transacrion(self, amount, days, customer_id, machine_id, dailly_rate):
+        transaction = RentalTransaction(amount)
+        transaction.transaction_type = "rental"
+        transaction.transaction_id_generator()
+        transaction.details = [days,customer_id,machine_id,dailly_rate]
+        return transaction
+        
+
+class DepositTransactionFactory(TransactionFactory):
+    pass
 class InvalidProductNameError(Exception):
     pass
 
-class ProductNotAvailable(Exception):
+class ProductNotAvailableError(Exception):
     pass
 
 class InvalidCustomerDataError(Exception):
     pass
 
 class InvalidProductDataError(Exception):
+    pass
+
+class InvalidTransactionDataError(Exception):
     pass
 
 
