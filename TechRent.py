@@ -1,6 +1,7 @@
 
 from abc import ABC, abstractmethod
 from datetime import datetime
+from random import randint
 machine_dict = {}
 customer_dict = {}
 
@@ -182,8 +183,6 @@ class Customer:
         if value < 0:
             raise ValueError("Balance can not be negative")
         self._balance = value
-
-# """Top up Balance"""
     
     def top_up_balance(self, amount):
         self_id = self.id
@@ -191,26 +190,25 @@ class Customer:
         if amount <= 0:
             raise ValueError("Amount can not be negative")
         self._balance += amount
-        transaction = DepositTransactionFactory.create_transacrion(self, amount, self_id, payment_method)
-        TransactionFactory.add_transaction(self,transaction)
-        print(f"Your balance was successfully poped up by {amount}$")
-
-# """Rent Machine"""
+        transaction = DepositTransactionFactory.create_transacrion(amount, self_id, payment_method)
+        TransactionFactory.add_transaction(transaction)
+        print(f"Your balance was successfully topped up by {amount}$")
     
     def rent_machine(self,machine_id,days):
+        self_id = self.id
         if machine_id in machine_dict.keys():
             if days<=0:
                 raise ValueError("You can not rent machine for less than one day")
-            dailly_rate = machine_dict[machine_id].price_per_day
-            final_price = days*dailly_rate
+            daily_rate = machine_dict[machine_id].price_per_day
+            final_price = days*daily_rate
             if final_price <= self._balance:
                 self.balance -= final_price
                 self.rented_machines.append(machine_id)
-                transaction = RentalTransactionFactory.create_transacrion(self, -final_price, days, self.id, machine_id, dailly_rate)
-                TransactionFactory.add_transaction(self,transaction)
+                transaction = RentalTransactionFactory.create_transacrion(-final_price, days, self_id, machine_id, daily_rate)
+                TransactionFactory.add_transaction(transaction)
                 print(f"Machine {machine_dict[machine_id].name} was successfully rented for {days} days.")
             else:
-                raise ValueError("Not enought money on your balance") 
+                raise ValueError("Not enough money on your balance") 
         else:
             raise ValueError("Current machine does not exist")
 
@@ -336,11 +334,14 @@ class Transaction:
         elif self.transaction_type == "deposit":
             t_id.append("02")
         else:
-            raise ValueError("Unidentified transaktion type")
+            raise ValueError("Unidentified transaction type")
         t_id.append(str(datetime.now()).replace("-","").replace(" ","").replace(":","").replace(".",""))
+        t_id.append(int(randint(10,99)))
         result = "".join(t_id)
         self.is_id_unique(result)
         self.transaction_id = result
+    
+    
 
 class RentalTransaction(Transaction):
     def __init__(self, amount):
@@ -350,7 +351,8 @@ class DepositTransaction(Transaction):
     def __init__(self, amount):
         super().__init__(amount)
 class TransactionFactory(ABC):
-    def add_transaction(self,transaction):
+    @staticmethod
+    def add_transaction(transaction):
         Transaction.transaction_dict[transaction.transaction_id] = transaction
     
     @abstractmethod
@@ -358,7 +360,8 @@ class TransactionFactory(ABC):
         pass
 
 class RentalTransactionFactory(TransactionFactory):
-    def create_transacrion(self, amount, days, customer_id, machine_id, dailly_rate):
+    @staticmethod
+    def create_transacrion(amount, days, customer_id, machine_id, dailly_rate):
         transaction = RentalTransaction(amount)
         transaction.transaction_type = "rental"
         transaction.transaction_id_generator()
@@ -367,7 +370,8 @@ class RentalTransactionFactory(TransactionFactory):
         
 
 class DepositTransactionFactory(TransactionFactory):
-    def create_transacrion(self, amount, customer_id, payment_method):
+    @staticmethod
+    def create_transacrion(amount, customer_id, payment_method):
         transaction = DepositTransaction(amount)
         transaction.transaction_type = "deposit"
         transaction.transaction_id_generator()
