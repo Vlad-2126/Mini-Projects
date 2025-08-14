@@ -182,11 +182,18 @@ class Customer:
         if value < 0:
             raise ValueError("Balance can not be negative")
         self._balance = value
+
+# """Top up Balance"""
     
     def top_up_balance(self, amount):
+        self_id = self.id
+        payment_method = "card"
         if amount <= 0:
             raise ValueError("Amount can not be negative")
         self._balance += amount
+        transaction = DepositTransactionFactory.create_transacrion(self, amount, self_id, payment_method)
+        TransactionFactory.add_transaction(self,transaction)
+        print(f"Your balance was successfully poped up by {amount}$")
 
 # """Rent Machine"""
     
@@ -199,7 +206,7 @@ class Customer:
             if final_price <= self._balance:
                 self.balance -= final_price
                 self.rented_machines.append(machine_id)
-                transaction = RentalTransactionFactory.create_transacrion(self, final_price, days, self.id, machine_id, dailly_rate)
+                transaction = RentalTransactionFactory.create_transacrion(self, -final_price, days, self.id, machine_id, dailly_rate)
                 TransactionFactory.add_transaction(self,transaction)
                 print(f"Machine {machine_dict[machine_id].name} was successfully rented for {days} days.")
             else:
@@ -360,7 +367,12 @@ class RentalTransactionFactory(TransactionFactory):
         
 
 class DepositTransactionFactory(TransactionFactory):
-    pass
+    def create_transacrion(self, amount, customer_id, payment_method):
+        transaction = DepositTransaction(amount)
+        transaction.transaction_type = "deposit"
+        transaction.transaction_id_generator()
+        transaction.details = [customer_id, payment_method]
+        return transaction
 class InvalidProductNameError(Exception):
     pass
 
