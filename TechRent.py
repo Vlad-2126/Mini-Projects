@@ -110,29 +110,19 @@ class DrillRigFactory(MachineFactory):
         drill_rig = DrillRig(id, name, price_per_day, drilling_depth, power)
         self.register_machine(drill_rig)
         return drill_rig
-
-def create_product(factory : MachineFactory, *args, **kwargs):
-    try:
-        if not isinstance(factory,MachineFactory):
-            raise InvalidMachineTypeError("Unknown type of product")
-        transport = factory.create_machine(*args, **kwargs)
-        return transport
-    except ValueError as e:
-        raise InvalidProductNameError(f"Error during product creation: {e}")
-
 class ProductManager:
     @staticmethod
     def create_product(factory : MachineFactory, *args, **kwargs):
         try:
             if not isinstance(factory,MachineFactory):
-                raise InvalidProductNameError("Unknown type of product")
+                raise InvalidMachineTypeError("Unknown type of product")
             transport = factory.create_machine(*args, **kwargs)
             return transport
         except ValueError as e:
             raise InvalidProductNameError(f"Error during product creation: {e}")
     
     @staticmethod
-    def is_not_available(machine_id):
+    def get_renting_customer(machine_id):
         for customer in customer_dict.values():
             if machine_id in customer.rented_machines:
                 return customer
@@ -142,14 +132,14 @@ class ProductManager:
     def machine_rent(customer_id,machine_id,days):
         if customer_id not in customer_dict:
             raise ClientNotFoundError("Current user does not exist")
-        if ProductManager.is_not_available(machine_id):
+        if ProductManager.get_renting_customer(machine_id):
             raise MachineAlreadyRentedError("This machine is currently rented and can not be rented again")
         customer = customer_dict[customer_id]
         customer.rent_machine(machine_id,days)
     
     @staticmethod
     def return_rent(machine_id):
-        renting_customer = ProductManager.is_not_available(machine_id)
+        renting_customer = ProductManager.get_renting_customer(machine_id)
         if not renting_customer:
             raise InvalidProductDataError("This machine is not rented and can not be returned")
         else:
@@ -361,11 +351,11 @@ class TransactionFactory(ABC):
 
 class RentalTransactionFactory(TransactionFactory):
     @staticmethod
-    def create_transacrion(amount, days, customer_id, machine_id, dailly_rate):
+    def create_transacrion(amount, days, customer_id, machine_id, daily_rate):
         transaction = RentalTransaction(amount)
         transaction.transaction_type = "rental"
         transaction.transaction_id_generator()
-        transaction.details = [days,customer_id,machine_id,dailly_rate]
+        transaction.details = [days,customer_id,machine_id,daily_rate]
         return transaction
         
 
