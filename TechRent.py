@@ -2,10 +2,17 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 from random import randint
+
+# Global dictionaries for storing all machines and customers
 machine_dict = {}
 customer_dict = {}
 
+# ------------------- MACHINE CLASSES -------------------
+
 class Machine(ABC):
+    # Abstract base class for all types of machines.
+    # Contains common attributes and validation logic for price_per_day.
+    
     def __init__(self,id,name,price_per_day):
         self.id = id
         self.name = name
@@ -14,23 +21,28 @@ class Machine(ABC):
     
     @property
     def price_per_day(self):
+        # Return the rental price per day.
         return self._price_per_day
     
     @price_per_day.setter
     def price_per_day(self,value):
+        # Validate and set the rental price per day.
         if value <= 0:
             raise ValueError("Price for rent cun`t be less than 0")
         self._price_per_day = value
     
     @abstractmethod
     def __str__(self):
+        # Return a detailed description of the machine.
         pass
     
     @abstractmethod
     def __repr__(self):
+        # Return a short string representation of the machine.
         pass
 
 class Excavator(Machine):
+    # Represents an excavator with transport speed and bucket capacity.
     def __init__(self, id, name, price_per_day, transport_speed, bucket_capacity):
         super().__init__(id, name, price_per_day)
         self.transport_speed = transport_speed
@@ -47,6 +59,7 @@ class Excavator(Machine):
         return f"Name: {self.name}, id: {self.id}, price: {self.price_per_day}"
 
 class Crane(Machine):
+    # Represents a crane with load capacity and boom reach.
     def __init__(self, id, name, price_per_day, load_capacity, boom_reach):
         super().__init__(id, name, price_per_day)
         self.load_capacity = load_capacity
@@ -63,6 +76,7 @@ class Crane(Machine):
         return f"Name: {self.name}, id: {self.id}, price: {self.price_per_day}"
         
 class DrillRig(Machine):
+    # Represents a drill rig with drilling depth and power.
     def __init__(self, id, name, price_per_day, drilling_depth, power):
         super().__init__(id, name, price_per_day)
         self.drilling_depth = drilling_depth
@@ -77,12 +91,16 @@ class DrillRig(Machine):
     
     def __repr__(self):
         return f"Name: {self.name}, id: {self.id}, price: {self.price_per_day}"
-        
+
+# ------------------- FACTORY CLASSES FOR MACHINES -------------------
+
 class MachineFactory(ABC):
+    # Abstract factory for creating and registering machines.
     def register_machine(self,machine):
         machine_dict[machine.id] = machine
         
     def is_id_unique(self,id):
+        # Ensure the machine ID is unique.
         if id in machine_dict.keys():
             raise InvalidProductNameError("Id must be unique")
     
@@ -110,7 +128,11 @@ class DrillRigFactory(MachineFactory):
         drill_rig = DrillRig(id, name, price_per_day, drilling_depth, power)
         self.register_machine(drill_rig)
         return drill_rig
+    
+# ------------------- PRODUCT MANAGER -------------------
+    
 class ProductManager:
+    # Handles high-level operations on products such as creation, renting, and returning.
     @staticmethod
     def create_product(factory : MachineFactory, *args, **kwargs):
         try:
@@ -123,6 +145,7 @@ class ProductManager:
     
     @staticmethod
     def get_renting_customer(machine_id):
+        # Find the customer currently renting the given machine.
         for customer in customer_dict.values():
             if machine_id in customer.rented_machines:
                 return customer
@@ -130,6 +153,7 @@ class ProductManager:
     
     @staticmethod
     def machine_rent(customer_id,machine_id,days):
+        # Process the machine renting procedure.
         if customer_id not in customer_dict:
             raise ClientNotFoundError("Current user does not exist")
         if ProductManager.get_renting_customer(machine_id):
@@ -139,6 +163,7 @@ class ProductManager:
     
     @staticmethod
     def return_rent(machine_id):
+        # Return a rented machine.
         renting_customer = ProductManager.get_renting_customer(machine_id)
         if not renting_customer:
             raise InvalidProductDataError("This machine is not rented and can not be returned")
@@ -147,6 +172,8 @@ class ProductManager:
     
 
 class Customer:
+    # Represents a customer in the system.
+    # Stores personal information and manages the customer's orders.
     def __init__(self, id, name, balance):
         self.id = id
         self.name = name
@@ -175,6 +202,7 @@ class Customer:
         self._balance = value
     
     def top_up_balance(self, amount):
+        # Adds funds to balance and records deposit transaction
         self_id = self.id
         payment_method = "card"
         if amount <= 0:
@@ -185,6 +213,7 @@ class Customer:
         print(f"Your balance was successfully topped up by {amount}$")
     
     def rent_machine(self,machine_id,days):
+        # Handles renting a machine and creating rental transaction
         self_id = self.id
         if machine_id in machine_dict.keys():
             if days<=0:
@@ -304,6 +333,7 @@ class CompanyFactory(CustomerFactory):
         return company
 
 class Transaction:
+    # Stores all transactions by their ID
     transaction_dict = {}
     
     def __init__(self, amount):
@@ -314,10 +344,12 @@ class Transaction:
         self.details = []
     
     def is_id_unique(self,id):
+        # Check if transaction ID is unique
         if id in Transaction.transaction_dict.keys():
             raise InvalidTransactionDataError("ID must be unique")
     
     def transaction_id_generator(self):
+        # Generate a unique transaction ID based on type and timestamp
         t_id = []
         if self.transaction_type == "rental":
             t_id.append("01")
@@ -390,9 +422,3 @@ class ClientNotFoundError(Exception):
 
 class InvalidMachineTypeError(Exception):
     pass
-
-
-# create_product(ExcavatorFactory(),"id1000","Bob Cat Excavator", 1000, 10, 1)
-# create_product(CraneFactory(),"id2000","Bob Cat Excavator", 1000, 10, 1)
-# create_product(DrillRigFactory(),"id3000","Bob Cat Excavator", 1000, 10, 1)
-
