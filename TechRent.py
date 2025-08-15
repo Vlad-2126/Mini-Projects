@@ -114,7 +114,7 @@ class DrillRigFactory(MachineFactory):
 def create_product(factory : MachineFactory, *args, **kwargs):
     try:
         if not isinstance(factory,MachineFactory):
-            raise InvalidProductNameError("Unknown type of product")
+            raise InvalidMachineTypeError("Unknown type of product")
         transport = factory.create_machine(*args, **kwargs)
         return transport
     except ValueError as e:
@@ -141,9 +141,9 @@ class ProductManager:
     @staticmethod
     def machine_rent(customer_id,machine_id,days):
         if customer_id not in customer_dict:
-            raise InvalidCustomerDataError("Current user does not exist")
+            raise ClientNotFoundError("Current user does not exist")
         if ProductManager.is_not_available(machine_id):
-            raise InvalidProductDataError("This machine is currently rented and can not be rented again")
+            raise MachineAlreadyRentedError("This machine is currently rented and can not be rented again")
         customer = customer_dict[customer_id]
         customer.rent_machine(machine_id,days)
     
@@ -390,6 +390,15 @@ class InvalidProductDataError(Exception):
     pass
 
 class InvalidTransactionDataError(Exception):
+    pass
+
+class MachineAlreadyRentedError(Exception):
+    pass
+
+class ClientNotFoundError(Exception):
+    pass
+
+class InvalidMachineTypeError(Exception):
     pass
 
 
