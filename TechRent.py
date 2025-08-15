@@ -2,6 +2,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 from random import randint
+from TestTR import test_system
 
 # Global dictionaries for storing all machines and customers
 machine_dict = {}
@@ -363,7 +364,7 @@ class Transaction:
         else:
             raise ValueError("Unidentified transaction type")
         t_id.append(str(datetime.now()).replace("-","").replace(" ","").replace(":","").replace(".",""))
-        t_id.append(int(randint(10,99)))
+        t_id.append(str(int(randint(10,99))))
         result = "".join(t_id)
         self.is_id_unique(result)
         self.transaction_id = result 
