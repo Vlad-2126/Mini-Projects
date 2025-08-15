@@ -171,6 +171,8 @@ class ProductManager:
             renting_customer.rented_machines.remove(machine_id)
     
 
+# ------------------- CUSTOMER CLASSES -------------------
+
 class Customer:
     # Represents a customer in the system.
     # Stores personal information and manages the customer's orders.
@@ -299,6 +301,7 @@ class Company(Customer):
     def __repr__(self):
         return f"id:{self.id}, name: {self.name}, balance: {self.balance}, rented machines: {self.rented_machines}, industry: {self.industry}, employee count: {self.employee_count}"
     
+# ------------------- FACTORY CLASSES FOR CUSTOMERS -------------------
 
 class CustomerFactory(ABC):
     def add_customer(self,customer):
@@ -332,6 +335,8 @@ class CompanyFactory(CustomerFactory):
         self.add_customer(company)
         return company
 
+# ------------------- TRANSACTION CLASSES-------------------
+
 class Transaction:
     # Stores all transactions by their ID
     transaction_dict = {}
@@ -361,9 +366,7 @@ class Transaction:
         t_id.append(int(randint(10,99)))
         result = "".join(t_id)
         self.is_id_unique(result)
-        self.transaction_id = result
-    
-    
+        self.transaction_id = result 
 
 class RentalTransaction(Transaction):
     def __init__(self, amount):
@@ -372,6 +375,9 @@ class RentalTransaction(Transaction):
 class DepositTransaction(Transaction):
     def __init__(self, amount):
         super().__init__(amount)
+        
+# ------------------- FACTORY CLASSES FOR TRANSACTIONS -------------------
+        
 class TransactionFactory(ABC):
     @staticmethod
     def add_transaction(transaction):
