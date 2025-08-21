@@ -48,13 +48,16 @@ class User: # A simple class to represent a library user
     def __str__(self):
         return f"User name: {self.name}, user id: {self._user_id}"
     
-    # @property
-    # def user_id(self):
-    #     if self._user_id in User.user_dict.keys():
-    #         raise ValueError("ID must be unique")
-    #     return self._user_id
+    @property
+    def user_id(self):
+        return self._user_id
+    
+    @user_id.setter
+    def user_id(self,value):
+        raise AttributeError("ID can not be changed")
     
     # @staticmethod
     # def add_user(name,user_id):
     #     User.user_dict[user_id] = User(name,user_id)
+
 
