@@ -18,10 +18,20 @@ class Book: # A simple class to represent a book in the library
         self._title = title
         self._author = author
         self.year = year
-        self.status = "ready"
+        self._status = None
     
     def __str__(self):
-        return f"The book is called'{self._title}', was writn by {self._author} in {self.year}"
+        return f"The book is called '{self._title}', was writn by {self._author} in {self.year}"
+    
+    @property
+    def status(self):
+        return self._status
+    
+    @status.setter
+    def status(self,value):
+        if value.lower() not in ["available","borrowed"]:
+            raise ValueError("Invalide status name")
+        self._status = value.lover()
     
     # @staticmethod
     # def add_book(title,author,year):
@@ -47,3 +57,4 @@ class User: # A simple class to represent a library user
     # @staticmethod
     # def add_user(name,user_id):
     #     User.user_dict[user_id] = User(name,user_id)
+
