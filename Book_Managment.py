@@ -1,19 +1,18 @@
-class CapitalName:
-    def __set_name__(self,owner,name):
-        self.name = "_" + name.capitalize()
+# class CapitalName:
+#     def __set_name__(self,owner,name):
+#         self.name = "_" + name
         
-    def __get__(self,instance,owner):
-        return instance.__dict__[self.name]
+#     def __get__(self,instance,owner):
+#         return instance.__dict__[self.name].capitalize()
     
-    def __set__(self,instance,value):
-        raise TypeError(f"{self.name} can not be changed")
+#     def __set__(self,instance,value):
+#         raise TypeError(f"{self.name} can not be changed")
     
-
-class Book:
-    book_dict = {}
+class Book: # A simple class to represent a book in the library
+    book_dict = {} # Placeholder for storing books (will be used later)
     
-    title = CapitalName()
-    author = CapitalName()
+    # title = CapitalName()
+    # author = CapitalName()
     
     def __init__(self,title,author,year):
         self._title = title
@@ -22,14 +21,14 @@ class Book:
         self.status = "ready"
     
     def __str__(self):
-        return f"The book is called'{self.title}', was writn by {self.author} in {self.year}"
+        return f"The book is called'{self._title}', was writn by {self._author} in {self.year}"
     
-    @staticmethod
-    def add_book(title,author,year):
-        Book.book_dict[title] = Book(title,author,year)
+    # @staticmethod
+    # def add_book(title,author,year):
+    #     Book.book_dict[title] = Book(title,author,year)
     
-class User:
-    user_dict = {}
+class User: # A simple class to represent a library user
+    user_dict = {} # Placeholder for storing users (will be used later)
     
     def __init__(self,name,user_id):
         self.name = name
@@ -37,21 +36,14 @@ class User:
         
     
     def __str__(self):
-        return f"User name: {self.name}, user id: {self.user_id}"
+        return f"User name: {self.name}, user id: {self._user_id}"
     
-    @property
-    def user_id(self):
-        if self._user_id in User.user_dict.keys():
-            raise ValueError("ID must be unique")
-        return self._user_id
+    # @property
+    # def user_id(self):
+    #     if self._user_id in User.user_dict.keys():
+    #         raise ValueError("ID must be unique")
+    #     return self._user_id
     
-    @staticmethod
-    def add_user(name,user_id):
-        User.user_dict[user_id] = User(name,user_id)
-
-Book.add_book("war and peac","tolstoi",1800)
-print(Book.book_dict)
-User.add_user("Oleg",111)
-print(User.user_dict)
-# print(Book.book_dict["war and peac"])
-# print(User.user_dict[111])
+    # @staticmethod
+    # def add_user(name,user_id):
+    #     User.user_dict[user_id] = User(name,user_id)
