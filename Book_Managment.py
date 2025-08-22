@@ -66,5 +66,17 @@ class Librarian(User):
         self.employee_id = employee_id
     
     def add_book(self,library,book):
-        pass
+        library.books.append(book)
 
+class Library:
+    def __init__(self):
+        self.books = []
+        self.users = []
+    
+    def add_user(self,user):
+        self.users.append(user)
+    
+    def show_books(self):
+        print(self.books)
+    
+    
