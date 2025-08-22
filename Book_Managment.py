@@ -60,7 +60,7 @@ class User: # A simple class to represent a library user
     # def add_user(name,user_id):
     #     User.user_dict[user_id] = User(name,user_id)
 
-class Librarian(User):
+class Librarian(User): #A simple class to represent librarian, user that can add books in books list
     def __init__(self, name, user_id, employee_id):
         super().__init__(name, user_id)
         self.employee_id = employee_id
@@ -68,7 +68,7 @@ class Librarian(User):
     def add_book(self,library,book):
         library.books.append(book)
 
-class Library:
+class Library: #A simple class to represent library that contain list of books and users
     def __init__(self):
         self.books = []
         self.users = []
